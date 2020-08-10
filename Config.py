@@ -1,8 +1,8 @@
 class Config:
     def __init__(self):
-        self.enc_dict_size = 1000
+        self.enc_vocab_size = 1000
         self.enc_embed_size = 128
-        self.dec_dict_size = 1000
+        self.dec_vocab_size = 1000
         self.dec_embed_size = 128
         self.enc_num_layers = 1
         self.dec_num_layers = 1
