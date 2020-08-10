@@ -1,6 +1,7 @@
 import torch
 from Config import config
 import random
+from DataLoader import loader
 
 
 class Encoder(torch.nn.Module):
@@ -88,12 +89,11 @@ class Seq2Seq(torch.nn.Module):
         super().__init__()
         self.encoder = Encoder()
         self.decoder = Decoder()
-        self.device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
-    def forward(self, src, tgt, teacher_force_ratio):
+    def forward(self, src, tgt, teacher_force_ratio=0.5):
         length = tgt.shape[1]
         enc_outputs, enc_hidden = self.encoder(src)
-        outputs = torch.zeros(length, config.batch_size, config.dec_vocab_size).to(self.device)
+        outputs = torch.zeros(length, config.batch_size, config.dec_vocab_size).to(config.device)
         output = tgt[:, 0]
         for i in range(1, length):
             output, hidden = self.decoder(enc_outputs, output, enc_hidden)
@@ -104,8 +104,17 @@ class Seq2Seq(torch.nn.Module):
         return outputs
 
 
-model = Seq2Seq()
-src = torch.LongTensor([[1, 2, 3], [2, 3, 4], [3, 4, 5]])
-tgt = torch.LongTensor([[0, 1, 2], [0, 2, 3], [0, 1, 3]])
-print(model)
-print(model(src, tgt, 0))
+model = Seq2Seq().to(config.device)
+# # 训练示例
+# optimizer = torch.optim.Adam(lr=config.lr, params=model.parameters())
+# loss_fn = torch.nn.CrossEntropyLoss()
+# for tensor1, tensor2 in loader.run():
+#     outputs = model(tensor1, tensor2)
+#     loss = 0
+#     temp = tensor2.permute(1, 0)
+#     for output, y in zip(outputs, temp):
+#         loss += loss_fn(output, y)
+#     optimizer.zero_grad()
+#     loss.backward()
+#     optimizer.step()
+#     print(loss)
