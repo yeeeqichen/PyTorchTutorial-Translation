@@ -8,7 +8,7 @@ class Encoder(torch.nn.Module):
     """
     Encoder
     用于将输入的句子编码为上下文向量 enc_outputs，以及获得 Decoder 的输入 hidden
-    输入: (batch, sequence, enc_vocab_size)
+    输入: (batch, sequence), 元素的值域为enc_vocab_size
     输出: enc_outputs: (batch, sequence, 2 * enc_hidden) hidden: (batch, dec_hidden)
     """
     def __init__(self):
